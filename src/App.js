@@ -9,6 +9,7 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
   const [newBlogTitle, setNewBlogTitle] = useState("")
   const [newBlogUrl, setNewBlogUrl] = useState("")
   const [newBlogAuthor, setNewBlogAuthor] = useState("")
@@ -48,7 +49,7 @@ const App = () => {
       }, 4000)
     }
   }
-  const handleNewBlog = async (event) => {
+  const handleNewBlog = (event) => {
     event.preventDefault()
     const newObject = {
       title: newBlogTitle,
@@ -58,9 +59,19 @@ const App = () => {
     blogService.create(newObject)
       .then(createdBlog => {
         setBlogs(blogs.concat(createdBlog))
+        setNotificationMessage(`A new blog ${newBlogTitle} by ${newBlogAuthor} added`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 4000)
         setNewBlogAuthor("")
         setNewBlogTitle("")
         setNewBlogUrl("")
+      })
+      .catch(e => {
+        setErrorMessage("Error: fill in all fields")
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 4000)
       })
   }
   const loginForm = () => (
@@ -115,9 +126,28 @@ const App = () => {
   )
 
   const ErrorMessage = ({ message }) => {
-    const notificationStyle = {
+    const errorMessageStyle = {
       border: "2px solid red",
       color: "red",
+      backgroundColor: "#d3d3d3",
+      padding: "10px",
+      borderRadius: "5px",
+      display: "inline-block",
+      fontWeight: "bold"
+    }
+    if (message === null) {
+      return null
+    }
+    return (
+      <div style={errorMessageStyle}>
+        {message}
+      </div>
+    )
+  }
+  const Notification = ({ message }) => {
+    const notificationStyle = {
+      border: "2px solid green",
+      color: "green",
       backgroundColor: "#d3d3d3",
       padding: "10px",
       borderRadius: "5px",
@@ -138,6 +168,7 @@ const App = () => {
       <header className="App-header">
         <h1>Bloglist</h1>
         <ErrorMessage message={errorMessage} />
+        <Notification message={notificationMessage} />
       </header>
       {user ? <div> <p>{user.name} logged in</p><button onClick={handleLogOut}>log out</button>{blogsForm()} <br /> {newBlog()} </div> : loginForm()}
     </div>
