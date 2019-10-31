@@ -16,6 +16,13 @@ const App = () => {
         setBlogs(blogs)
       })
   }, [])
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -23,6 +30,9 @@ const App = () => {
         username,
         password
       })
+      window.localStorage.setItem(
+        'loggedInUser', JSON.stringify(user)
+      )
       setUser(user)
       setUsername("")
       setPassword("")
@@ -33,37 +43,42 @@ const App = () => {
       }, 4000)
     }
   }
-  const loginForm = () => {
-    return (
-      <div>
-        <h2>Log in</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <span>username </span>
-            <input type="text"
-              name="Username"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)} />
-          </div>
-          <div>
-            <span>password </span>
-            <input type="text" name="Password" value={password} onChange={({ target }) => setPassword(target.value)}></input>
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
+  const loginForm = () => (
+    <div>
+      <h2>Log in</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <span>username </span>
+          <input type="text"
+            name="Username"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)} />
+        </div>
+        <div>
+          <span>password </span>
+          <input type="text" name="Password" value={password} onChange={({ target }) => setPassword(target.value)}></input>
+        </div>
+        <button type="submit">login</button>
+      </form>
+    </div>
 
-    )
+  )
+
+
+  const handleLogOut = () => {
+    window.localStorage.removeItem('loggedInUser')
+    setUser(null)
   }
 
-  const blogsForm = () => {
-    return (
-      <div>
-        <h2>blogs</h2>
-        {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
-      </div>
-    )
-  }
+
+
+  const blogsForm = () => (
+    <div>
+      <h2>blogs</h2>
+      {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+    </div>
+  )
+
   const ErrorMessage = ({ message }) => {
     const notificationStyle = {
       border: "2px solid red",
@@ -89,7 +104,7 @@ const App = () => {
         <h1>Bloglist</h1>
         <ErrorMessage message={errorMessage} />
       </header>
-      {user ? <div> <p>{user.name} logged in</p>{blogsForm()} </div> : loginForm()}
+      {user ? <div> <p>{user.name} logged in</p><button onClick={handleLogOut}>log out</button>{blogsForm()} </div> : loginForm()}
     </div>
   );
 }
