@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
+import LoginForm from './components/LoginForm'
+import BlogsForm from './components/BlogsForm'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -13,6 +15,9 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState("")
   const [newBlogUrl, setNewBlogUrl] = useState("")
   const [newBlogAuthor, setNewBlogAuthor] = useState("")
+  const [loginVisible, setLoginVisible] = useState(false)
+  const [blogFormVisible, setblogFormVisible] = useState(false)
+
 
   useEffect(() => {
     blogService
@@ -74,42 +79,51 @@ const App = () => {
         }, 4000)
       })
   }
-  const loginForm = () => (
-    <div>
-      <h2>Log in</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <span>username </span>
-          <input type="text"
-            name="Username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)} />
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
         </div>
-        <div>
-          <span>password </span>
-          <input type="text" name="Password" value={password} onChange={({ target }) => setPassword(target.value)} />
+        <div style={showWhenVisible}>
+          <LoginForm
+            password={password}
+            username={username}
+            handleLogin={handleLogin}
+            setUsername={setUsername}
+            setPassword={setPassword}
+
+          />
         </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
+      </div>
+    )
+  }
 
-  )
-
-  const newBlog = () => (
-    <div>
-      <h2>
-        add new blog
-      </h2>
-      <form onSubmit={handleNewBlog}>
-        title <input type="text" name="Title" value={newBlogTitle} onChange={({ target }) => setNewBlogTitle(target.value)} /><br />
-        author <input type="text" name="Author" value={newBlogAuthor} onChange={({ target }) => setNewBlogAuthor(target.value)} /><br />
-        url <input type="text" name="Url" value={newBlogUrl} onChange={({ target }) => setNewBlogUrl(target.value)} /><br />
-        <button type="submit">add</button>
-      </form>
-    </div>
-
-  )
-
+  const blogsForm = () => {
+    const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
+    const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setblogFormVisible(true)}>New blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <BlogsForm
+            handleNewBlog={handleNewBlog}
+            newBlogTitle={newBlogTitle}
+            newBlogAuthor={newBlogAuthor}
+            newBlogUrl={newBlogUrl}
+            setNewBlogTitle={setNewBlogTitle}
+            setNewBlogAuthor={setNewBlogAuthor}
+            setNewBlogUrl={setNewBlogUrl}
+          />
+          <button onClick={() => setblogFormVisible(false)}>Cancel</button>
+        </div>
+      </div>
+    )
+  }
 
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedInUser')
@@ -118,7 +132,7 @@ const App = () => {
 
 
 
-  const blogsForm = () => (
+  const blogsListing = () => (
     <div>
       <h2>blogs</h2>
       {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
@@ -170,7 +184,7 @@ const App = () => {
         <ErrorMessage message={errorMessage} />
         <Notification message={notificationMessage} />
       </header>
-      {user ? <div> <p>{user.name} logged in</p><button onClick={handleLogOut}>log out</button>{blogsForm()} <br /> {newBlog()} </div> : loginForm()}
+      {user ? <div> <p>{user.name} logged in<button onClick={handleLogOut}>log out</button></p>{blogsForm()} <br /> {blogsListing()} </div> : loginForm()}
     </div>
   )
 }
