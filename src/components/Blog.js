@@ -1,12 +1,27 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [titleClicked, setTitleClicked] = useState(false)
+  const [blogLikes, setBlogLikes] = useState(blog.likes)
   console.log(blog.user)
 
   const handleBlogClick = () => {
     setTitleClicked(!titleClicked)
     console.log(titleClicked)
+  }
+
+  const handleLikeButtonClick = (blog) => {
+    const updatedBlog = {
+      title: blog.title,
+      url: blog.url,
+      author: blog.author,
+      user: blog.user,
+      likes: blogLikes + 1,
+      id: blog.id
+    }
+    setBlogLikes(blogLikes + 1)
+    blogService.update(updatedBlog)
   }
 
   const blogInfoStyle = {
@@ -24,7 +39,7 @@ const Blog = ({ blog }) => {
           <br />
           {blog.url}
           <br />
-          {blog.likes} likes <button>like</button>
+          {blogLikes} likes <button onClick={() => handleLikeButtonClick(blog)}>like</button>
           <br />
           added by {blog.user.name}
         </p>
