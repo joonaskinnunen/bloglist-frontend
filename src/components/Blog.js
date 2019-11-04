@@ -4,7 +4,6 @@ import blogService from '../services/blogs'
 const Blog = ({ blog }) => {
   const [titleClicked, setTitleClicked] = useState(false)
   const [blogLikes, setBlogLikes] = useState(blog.likes)
-  console.log(blog.user)
 
   const handleBlogClick = () => {
     setTitleClicked(!titleClicked)
