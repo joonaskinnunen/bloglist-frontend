@@ -9,13 +9,13 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
-  const [newBlogTitle, setNewBlogTitle] = useState("")
-  const [newBlogUrl, setNewBlogUrl] = useState("")
-  const [newBlogAuthor, setNewBlogAuthor] = useState("")
+  const [newBlogTitle, setNewBlogTitle] = useState('')
+  const [newBlogUrl, setNewBlogUrl] = useState('')
+  const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const noteFormRef = React.createRef()
 
   useEffect(() => {
@@ -47,10 +47,10 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     } catch (e) {
-      setErrorMessage("wrong username or password")
+      setErrorMessage('wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 4000)
@@ -78,12 +78,13 @@ const App = () => {
         setTimeout(() => {
           setNotificationMessage(null)
         }, 4000)
-        setNewBlogAuthor("")
-        setNewBlogTitle("")
-        setNewBlogUrl("")
+        setNewBlogAuthor('')
+        setNewBlogTitle('')
+        setNewBlogUrl('')
       })
       .catch(e => {
-        setErrorMessage("Error: fill in all fields")
+        setErrorMessage('Error: fill in all fields')
+        console.log(e)
         setTimeout(() => {
           setErrorMessage(null)
         }, 4000)
@@ -140,13 +141,13 @@ const App = () => {
 
   const ErrorMessage = ({ message }) => {
     const errorMessageStyle = {
-      border: "2px solid red",
-      color: "red",
-      backgroundColor: "#d3d3d3",
-      padding: "10px",
-      borderRadius: "5px",
-      display: "inline-block",
-      fontWeight: "bold"
+      border: '2px solid red',
+      color: 'red',
+      backgroundColor: '#d3d3d3',
+      padding: '10px',
+      borderRadius: '5px',
+      display: 'inline-block',
+      fontWeight: 'bold'
     }
     if (message === null) {
       return null
@@ -159,13 +160,13 @@ const App = () => {
   }
   const Notification = ({ message }) => {
     const notificationStyle = {
-      border: "2px solid green",
-      color: "green",
-      backgroundColor: "#d3d3d3",
-      padding: "10px",
-      borderRadius: "5px",
-      display: "inline-block",
-      fontWeight: "bold"
+      border: '2px solid green',
+      color: 'green',
+      backgroundColor: '#d3d3d3',
+      padding: '10px',
+      borderRadius: '5px',
+      display: 'inline-block',
+      fontWeight: 'bold'
     }
     if (message === null) {
       return null
@@ -188,4 +189,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default App

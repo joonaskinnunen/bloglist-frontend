@@ -39,10 +39,10 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   const blogInfoStyle = {
-    border: "1px solid black",
-    padding: "5px",
-    margin: "10px",
-    borderRadius: "5px"
+    border: '1px solid black',
+    padding: '5px',
+    margin: '10px',
+    borderRadius: '5px'
   }
 
   const BlogFullInfo = () => {
