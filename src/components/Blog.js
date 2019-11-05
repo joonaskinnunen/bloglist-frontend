@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, blogs, setBlogs, user }) => {
   const [titleClicked, setTitleClicked] = useState(false)
   const [blogLikes, setBlogLikes] = useState(blog.likes)
-
   const handleBlogClick = () => {
     setTitleClicked(!titleClicked)
     console.log(titleClicked)
   }
 
-  const handleLikeButtonClick = (blog) => {
+  const handleLikeButtonClick = blog => {
     const updatedBlog = {
       title: blog.title,
       url: blog.url,
@@ -19,8 +18,23 @@ const Blog = ({ blog }) => {
       likes: blogLikes + 1,
       id: blog.id
     }
-    setBlogLikes(blogLikes + 1)
     blogService.update(updatedBlog)
+      .then(() => {
+        setBlogLikes(blogLikes + 1)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  }
+
+  const handleRemoveButtonClick = blog => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      blogService.remove(blog.id)
+        .then(() => {
+          console.log(blog.id)
+          setBlogs(blogs.filter(x => x.id !== blog.id))
+        })
+    }
   }
 
   const blogInfoStyle = {
@@ -41,6 +55,8 @@ const Blog = ({ blog }) => {
           {blogLikes} likes <button onClick={() => handleLikeButtonClick(blog)}>like</button>
           <br />
           added by {blog.user.name}
+          <br />
+          {user.username === blog.user.username ? <button onClick={() => handleRemoveButtonClick(blog)}>remove</button> : void 0}
         </p>
       </div>
     )

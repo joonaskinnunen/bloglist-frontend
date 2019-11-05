@@ -16,6 +16,7 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState("")
   const [newBlogUrl, setNewBlogUrl] = useState("")
   const [newBlogAuthor, setNewBlogAuthor] = useState("")
+  const noteFormRef = React.createRef()
 
   useEffect(() => {
     blogService
@@ -56,6 +57,7 @@ const App = () => {
   }
   const handleNewBlog = (event) => {
     event.preventDefault()
+    noteFormRef.current.toggleVisibility()
     const newObject = {
       title: newBlogTitle,
       url: newBlogUrl,
@@ -63,6 +65,7 @@ const App = () => {
     }
     blogService.create(newObject)
       .then(createdBlog => {
+        console.log(createdBlog)
         setBlogs(blogs.concat(createdBlog))
         setNotificationMessage(`A new blog ${newBlogTitle} by ${newBlogAuthor} added`)
         setTimeout(() => {
@@ -99,7 +102,7 @@ const App = () => {
   const blogsForm = () => {
     return (
       <div>
-        <Togglable buttonLabel='add new'>
+        <Togglable buttonLabel='add new' ref={noteFormRef}>
           <BlogsForm
             handleNewBlog={handleNewBlog}
             newBlogTitle={newBlogTitle}
@@ -124,7 +127,7 @@ const App = () => {
   const blogsListing = () => (
     <div>
       <h2>blogs</h2>
-      {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+      {blogs.map((blog) => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />)}
     </div>
   )
 
