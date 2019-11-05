@@ -21,6 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(blogs => {
+        console.log(blogs)
         setBlogs(blogs.sort((a, b) => {
           return b.likes - a.likes
         }))
@@ -66,7 +67,13 @@ const App = () => {
     blogService.create(newObject)
       .then(createdBlog => {
         console.log(createdBlog)
-        setBlogs(blogs.concat(createdBlog))
+        blogService
+          .getAll().then(blogs => {
+            console.log(blogs)
+            setBlogs(blogs.sort((a, b) => {
+              return b.likes - a.likes
+            }))
+          })
         setNotificationMessage(`A new blog ${newBlogTitle} by ${newBlogAuthor} added`)
         setTimeout(() => {
           setNotificationMessage(null)
