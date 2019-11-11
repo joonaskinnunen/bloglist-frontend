@@ -135,7 +135,7 @@ const App = () => {
   const blogsListing = () => (
     <div>
       <h2>blogs</h2>
-      {blogs.map((blog) => <Blog className='blog' key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />)}
+      {blogs.map((blog) => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />)}
     </div>
   )
 

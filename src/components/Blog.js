@@ -64,7 +64,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
   const BlogLessInfo = () => {
     return (
-      <div style={blogInfoStyle}>
+      <div style={blogInfoStyle} className='blog'>
         <p onClick={handleBlogClick}>
           {blog.title} by {blog.author}
         </p>
