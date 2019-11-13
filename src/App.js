@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogsForm from './components/BlogsForm'
@@ -9,8 +8,6 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [newBlogTitle, setNewBlogTitle] = useState('')
@@ -26,36 +23,7 @@ const App = () => {
         }))
       })
   }, [])
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      console.log(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username,
-        password
-      })
-      window.localStorage.setItem(
-        'loggedInUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (e) {
-      setErrorMessage('wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 4000)
-    }
-  }
+
   const handleNewBlog = (event) => {
     event.preventDefault()
     noteFormRef.current.toggleVisibility()
@@ -95,18 +63,14 @@ const App = () => {
       <div>
         <Togglable buttonLabel='login'>
           <LoginForm
-            password={password}
-            username={username}
-            handleLogin={handleLogin}
-            setUsername={setUsername}
-            setPassword={setPassword}
+            setErrorMessage={setErrorMessage}
+            setUser={setUser}
 
           />
         </Togglable>
       </div>
     )
   }
-
   const blogsForm = () => {
     return (
       <div>

@@ -1,25 +1,54 @@
-import React from 'react'
-const loginForm = ({
-  handleLogin,
-  username,
-  password,
-  setPassword,
-  setUsername
-}) => {
+import React, { useEffect } from 'react'
+import useField from '../hooks/index'
+import loginService from '../services/login'
+import blogService from '../services/blogs'
+
+const LoginForm = ({ setErrorMessage, setUser }) => {
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      console.log(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+  const username = useField('text')
+  const password = useField('text')
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    const nameValue = username.value
+    const passwordValue = password.value
+    try {
+      const user = await loginService.login({
+        username: nameValue,
+        password: passwordValue
+      })
+      window.localStorage.setItem(
+        'loggedInUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
+      setUser(user)
+    } catch (e) {
+      setErrorMessage('wrong username or password')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 4000)
+    }
+  }
+
   return (
     <div>
       <h2>Log in</h2>
       <form onSubmit={handleLogin}>
         <div>
           <span>username </span>
-          <input type="text"
-            name="Username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)} />
+          <input {...username} />
         </div>
         <div>
           <span>password </span>
-          <input type="text" name="Password" value={password} onChange={({ target }) => setPassword(target.value)} />
+          <input {...password} />
         </div>
         <button type="submit">login</button>
       </form>
@@ -28,4 +57,4 @@ const loginForm = ({
   )
 }
 
-export default loginForm
+export default LoginForm
