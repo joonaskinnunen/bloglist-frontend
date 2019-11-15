@@ -6,6 +6,10 @@ import blogService from '../services/blogs'
 const LoginForm = ({ setErrorMessage, setUser }) => {
   const username = useField('text')
   const password = useField('text')
+  const usernameInput = { ...username }
+  const passwordInput = { ...password }
+  delete usernameInput.reset
+  delete passwordInput.reset
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
@@ -47,11 +51,11 @@ const LoginForm = ({ setErrorMessage, setUser }) => {
       <form onSubmit={handleLogin}>
         <div>
           <span>username </span>
-          <input {...username} />
+          <input {...usernameInput} />
         </div>
         <div>
           <span>password </span>
-          <input {...password} />
+          <input {...passwordInput} />
         </div>
         <button type="submit">login</button>
       </form>

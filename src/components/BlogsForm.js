@@ -7,6 +7,14 @@ const BlogsForm = ({ setBlogs, setErrorMessage, setNotificationMessage, blogsFor
   const url = useField('text')
   const author = useField('text')
 
+  const titleInput = { ...title }
+  const urlInput = { ...url }
+  const authorInput = { ...author }
+
+  delete titleInput.reset
+  delete urlInput.reset
+  delete authorInput.reset
+
   const handleNewBlog = (event) => {
     event.preventDefault()
     blogsFormRef.current.toggleVisibility()
@@ -47,9 +55,9 @@ const BlogsForm = ({ setBlogs, setErrorMessage, setNotificationMessage, blogsFor
       add a new blog
       </h2>
       <form onSubmit={handleNewBlog}>
-                title <input {...title} /><br />
-                author <input {...author} /><br />
-                url <input {...url} /><br />
+                title <input {...titleInput} /><br />
+                author <input {...authorInput} /><br />
+                url <input {...urlInput} /><br />
         <button type="submit">add</button>
       </form>
     </div>
