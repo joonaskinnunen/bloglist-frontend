@@ -10,10 +10,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
-  const [newBlogTitle, setNewBlogTitle] = useState('')
-  const [newBlogUrl, setNewBlogUrl] = useState('')
-  const [newBlogAuthor, setNewBlogAuthor] = useState('')
-  const noteFormRef = React.createRef()
+  const blogsFormRef = React.createRef()
 
   useEffect(() => {
     blogService
@@ -24,40 +21,6 @@ const App = () => {
       })
   }, [])
 
-  const handleNewBlog = (event) => {
-    event.preventDefault()
-    noteFormRef.current.toggleVisibility()
-    const newObject = {
-      title: newBlogTitle,
-      url: newBlogUrl,
-      author: newBlogAuthor
-    }
-    blogService.create(newObject)
-      .then(createdBlog => {
-        console.log(createdBlog)
-        blogService
-          .getAll().then(blogs => {
-            console.log(blogs)
-            setBlogs(blogs.sort((a, b) => {
-              return b.likes - a.likes
-            }))
-          })
-        setNotificationMessage(`A new blog ${newBlogTitle} by ${newBlogAuthor} added`)
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 4000)
-        setNewBlogAuthor('')
-        setNewBlogTitle('')
-        setNewBlogUrl('')
-      })
-      .catch(e => {
-        setErrorMessage('Error: fill in all fields')
-        console.log(e)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 4000)
-      })
-  }
   const loginForm = () => {
     return (
       <div>
@@ -74,15 +37,12 @@ const App = () => {
   const blogsForm = () => {
     return (
       <div>
-        <Togglable buttonLabel='add new' ref={noteFormRef}>
+        <Togglable buttonLabel='add new' ref={blogsFormRef}>
           <BlogsForm
-            handleNewBlog={handleNewBlog}
-            newBlogTitle={newBlogTitle}
-            newBlogAuthor={newBlogAuthor}
-            newBlogUrl={newBlogUrl}
-            setNewBlogTitle={setNewBlogTitle}
-            setNewBlogAuthor={setNewBlogAuthor}
-            setNewBlogUrl={setNewBlogUrl}
+            setNotificationMessage={setNotificationMessage}
+            setBlogs={setBlogs}
+            setErrorMessage={setErrorMessage}
+            blogsFormRef={blogsFormRef}
           />
         </Togglable>
       </div>

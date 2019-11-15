@@ -4,6 +4,9 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 const LoginForm = ({ setErrorMessage, setUser }) => {
+  const username = useField('text')
+  const password = useField('text')
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedUserJSON) {
@@ -12,9 +15,7 @@ const LoginForm = ({ setErrorMessage, setUser }) => {
       console.log(user)
       blogService.setToken(user.token)
     }
-  }, [])
-  const username = useField('text')
-  const password = useField('text')
+  }, [setUser])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -30,6 +31,8 @@ const LoginForm = ({ setErrorMessage, setUser }) => {
       )
       blogService.setToken(user.token)
       setUser(user)
+      username.reset()
+      password.reset()
     } catch (e) {
       setErrorMessage('wrong username or password')
       setTimeout(() => {
